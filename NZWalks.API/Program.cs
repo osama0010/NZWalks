@@ -24,6 +24,7 @@ namespace NZWalks.API
             });
 
             builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
+            builder.Services.AddScoped<IWalkRepository, WalkRepository>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
             var app = builder.Build();
