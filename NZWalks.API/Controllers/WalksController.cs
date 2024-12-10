@@ -22,6 +22,7 @@ namespace NZWalks.API.Controllers
         }
         // https://localhost:portnumber/api/Walks
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkDto addWalkdto)
         {
             // map from dto to domain model
@@ -36,10 +37,14 @@ namespace NZWalks.API.Controllers
         }
 
         //localhost:portnum/api/walks/
+        //localhost:portnum/api/walks?FilterOn=name&FilterQuery=Mount&sortBy=Name&isAscending=true&pageNumber=1&pageSize=5
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? FilterOn, [FromQuery] string? FilterQuery,
+                                [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
+                                [FromQuery] int pageNumber=1, [FromQuery] int pageSize=100)
         {
-            var walksDomainModel = await walkRepository.GetAllAsync();
+            var walksDomainModel = await walkRepository.GetAllAsync(FilterOn,FilterQuery,sortBy,isAscending ?? true,
+                                                                    pageNumber,pageSize);
 
             var walksDto = mapper.Map<List<WalkDto>>(walksDomainModel);
 
