@@ -46,6 +46,10 @@ namespace NZWalks.API.Controllers
             var walksDomainModel = await walkRepository.GetAllAsync(FilterOn,FilterQuery,sortBy,isAscending ?? true,
                                                                     pageNumber,pageSize);
 
+            // Create an Exception
+            //throw new Exception("This is a new exception");
+
+            // Map domain model to Dto
             var walksDto = mapper.Map<List<WalkDto>>(walksDomainModel);
 
             return Ok(walksDto);

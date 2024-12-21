@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NZWalks.API.Data;
 using NZWalks.API.Mappings;
+using NZWalks.API.Middlewares;
 using NZWalks.API.Repositories;
+using Serilog;
 using System.Text;
 
 namespace NZWalks.API
@@ -19,6 +22,13 @@ namespace NZWalks.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            var logger = new LoggerConfiguration().WriteTo.Console()
+                .MinimumLevel.Information().CreateLogger();
+            
+            builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
+
 
             builder.Services.AddControllers();
             builder.Services.AddHttpContextAccessor();
@@ -116,6 +126,8 @@ namespace NZWalks.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddlware>();
 
             app.UseHttpsRedirection();
 
